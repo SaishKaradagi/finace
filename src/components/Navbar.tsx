@@ -1,10 +1,24 @@
-'use client'
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '@/store/authSlice';
-import { Box, Flex, Heading, Button, HStack, useColorModeValue, useToast } from '@chakra-ui/react';
-import { RootState, AppDispatch } from '@/store';
+"use client";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "@/store/authSlice";
+import {
+  Box,
+  Flex,
+  Heading,
+  Button,
+  HStack,
+  useColorModeValue,
+  useToast,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
+} from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { RootState, AppDispatch } from "@/store";
 
 export default function NavBar() {
   const dispatch = useDispatch<AppDispatch>();
@@ -14,7 +28,7 @@ export default function NavBar() {
 
   const handleLogout = async () => {
     await dispatch(logout());
-    router.push('/');
+    router.push("/");
     toast({
       title: "Logged Out",
       description: "You have been successfully logged out.",
@@ -28,12 +42,13 @@ export default function NavBar() {
     if (user && !user.onboardingCompleted) {
       toast({
         title: "Onboarding Required",
-        description: "Please complete your onboarding before accessing this feature.",
+        description:
+          "Please complete your onboarding before accessing this feature.",
         status: "warning",
         duration: 5000,
         isClosable: true,
       });
-      router.push('/onboarding');
+      router.push("/onboarding");
     } else {
       router.push(path);
     }
@@ -42,60 +57,100 @@ export default function NavBar() {
   return (
     <Box w="100%">
       <Flex
-        bg={useColorModeValue('white', 'gray.800')}
-        color={useColorModeValue('gray.600', 'white')}
-        minH={'60px'}
+        bg={useColorModeValue("white", "gray.800")}
+        color={useColorModeValue("gray.600", "white")}
+        minH={"60px"}
         py={{ base: 2 }}
         px={{ base: 4, md: 60 }}
         borderBottom={1}
-        borderStyle={'solid'}
-        borderColor={useColorModeValue('gray.200', 'gray.900')}
-        align={'center'}
-        justify={'space-between'}
+        borderStyle={"solid"}
+        borderColor={useColorModeValue("gray.200", "gray.900")}
+        align={"center"}
+        justify={"space-between"}
         w="100%"
       >
+        {/* Logo */}
         <Heading
           as={Link}
-          href={'/'}
-          fontSize={'3xl'}
-          fontFamily={'heading'}
-          color={useColorModeValue('gray.800', 'white')}
-          fontWeight={'bold'}
+          href={"/"}
+          fontSize={"3xl"}
+          fontFamily={"heading"}
+          color={useColorModeValue("gray.800", "white")}
+          fontWeight={"bold"}
         >
           AarthikSakhi
         </Heading>
+
+        {/* Navigation Links */}
         <HStack spacing={4}>
           {user && (
             <>
               <Button
-                onClick={() => handleNavigation('/financial-snapshot')}
-                fontSize={'sm'}
+                onClick={() => handleNavigation("/financial-snapshot")}
+                fontSize={"sm"}
                 fontWeight={400}
-                variant={'ghost'}
+                variant={"ghost"}
               >
                 Snapshot
               </Button>
               <Button
-                onClick={() => handleNavigation('/goals')}
-                fontSize={'sm'}
+                onClick={() => handleNavigation("/goals")}
+                fontSize={"sm"}
                 fontWeight={400}
-                variant={'ghost'}
+                variant={"ghost"}
               >
                 Goals
               </Button>
               <Button
-                onClick={() => handleNavigation('/profile')}
-                fontSize={'sm'}
+                onClick={() => handleNavigation("/profile")}
+                fontSize={"sm"}
                 fontWeight={400}
-                variant={'ghost'}
+                variant={"ghost"}
               >
                 Profile
               </Button>
+
+              {/* Dropdown Menu */}
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  rightIcon={<ChevronDownIcon />}
+                  fontSize={"sm"}
+                  fontWeight={400}
+                  variant={"ghost"}
+                >
+                  More
+                </MenuButton>
+                <MenuList>
+                  <MenuItem
+                    onClick={() => handleNavigation("/Community-Section")}
+                  >
+                    Community & Mentors
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => handleNavigation("/Financial-Schemes")}
+                  >
+                    Financial Schemes
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => handleNavigation("/learning-resources")}
+                  >
+                    Learning Resources
+                  </MenuItem>
+                  <MenuItem onClick={() => handleNavigation("/Tax-Planning")}>
+                    Tax Planning
+                  </MenuItem>
+                  <MenuItem onClick={() => handleNavigation("/voice-chat")}>
+                    Voice Chat
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+
               <Button
                 onClick={handleLogout}
-                fontSize={'sm'}
+                fontSize={"sm"}
                 fontWeight={400}
-                variant={'ghost'}
+                variant={"ghost"}
               >
                 Logout
               </Button>
@@ -106,21 +161,21 @@ export default function NavBar() {
               <Button
                 as={Link}
                 href="/login"
-                fontSize={'sm'}
+                fontSize={"sm"}
                 fontWeight={400}
-                variant={'ghost'}
+                variant={"ghost"}
               >
                 Sign In
               </Button>
               <Button
                 as={Link}
                 href="/register"
-                fontSize={'sm'}
+                fontSize={"sm"}
                 fontWeight={600}
-                color={'white'}
-                bg={'black'}
+                color={"white"}
+                bg={"black"}
                 _hover={{
-                  bg: 'gray.700',
+                  bg: "gray.700",
                 }}
               >
                 Sign Up

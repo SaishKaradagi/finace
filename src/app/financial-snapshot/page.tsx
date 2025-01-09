@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import {
   Box,
   Container,
@@ -27,9 +27,21 @@ import {
   Stat,
   StatLabel,
   StatNumber,
-} from '@chakra-ui/react';
-import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
-import { RootState } from '@/store';
+} from "@chakra-ui/react";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from "recharts";
+import { RootState } from "@/store";
 
 const FinancialSnapshot = () => {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -41,14 +53,14 @@ const FinancialSnapshot = () => {
     annualIncome: user?.annualIncome || 0,
     currentSavings: user?.currentSavings || 0,
     monthlyExpenses: user?.monthlyExpenses || {},
-    financialGoals: [...user?.financialGoals || []],
-    riskTolerance: user?.riskTolerance || 'medium'
+    financialGoals: [...(user?.financialGoals || [])],
+    riskTolerance: user?.riskTolerance || "medium",
   });
-  
+
   const [netWorth, setNetWorth] = useState(0);
   const [financialHealthScore, setFinancialHealthScore] = useState(0);
 
-  const buttonColor = useColorModeValue('white', 'brand');
+  const buttonColor = useColorModeValue("white", "brand");
 
   useEffect(() => {
     // Calculate net worth and financial health score when financial data changes
@@ -59,44 +71,50 @@ const FinancialSnapshot = () => {
   // Calculates the user's net worth.
   const calculateNetWorth = () => {
     const totalAssets = financialData.currentSavings;
-    const totalLiabilities = 0; 
+    const totalLiabilities = 0;
     setNetWorth(totalAssets - totalLiabilities);
   };
 
   // Calculates the user's financial health score.
   const calculateFinancialHealthScore = () => {
-    const savingsRatio = financialData.currentSavings / financialData.annualIncome;
+    const savingsRatio =
+      financialData.currentSavings / financialData.annualIncome;
     const score = Math.min(Math.round(savingsRatio * 100), 100);
     setFinancialHealthScore(score);
   };
 
   // Handles changes in input fields.
-  const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => { 
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
     const { name, value } = e.target;
-    setFinancialData(prev => ({
+    setFinancialData((prev) => ({
       ...prev,
-      [name]: name === 'annualIncome' || name === 'currentSavings' ? Number(value) : value
+      [name]:
+        name === "annualIncome" || name === "currentSavings"
+          ? Number(value)
+          : value,
     }));
   };
 
   // Handles changes in monthly expense inputs.
   const handleExpenseChange = (category: string, value: string) => {
-    setFinancialData(prev => ({
+    setFinancialData((prev) => ({
       ...prev,
       monthlyExpenses: {
         ...prev.monthlyExpenses,
-        [category]: Number(value)
-      }
+        [category]: Number(value),
+      },
     }));
   };
 
   // Handles changes in financial goals selection.
   const handleGoalChange = (goal: string) => {
-    setFinancialData(prev => ({
+    setFinancialData((prev) => ({
       ...prev,
       financialGoals: prev.financialGoals.includes(goal)
-        ? prev.financialGoals.filter(g => g !== goal)
-        : [...prev.financialGoals, goal]
+        ? prev.financialGoals.filter((g) => g !== goal)
+        : [...prev.financialGoals, goal],
     }));
   };
 
@@ -105,7 +123,7 @@ const FinancialSnapshot = () => {
     onOpen();
   };
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
   // Prepares data for the expense pie chart.
   const prepareExpenseData = () => {
@@ -119,106 +137,139 @@ const FinancialSnapshot = () => {
   const RADIAN = Math.PI / 180;
 
   // Customizes the labels on the pie chart.
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+  }: any) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
     return (
-      <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+      <text
+        x={x}
+        y={y}
+        fill="white"
+        textAnchor={x > cx ? "start" : "end"}
+        dominantBaseline="central"
+      >
         {`${(percent * 100).toFixed(0)}%`}
       </text>
     );
   };
 
   const incomeVsSavingsData = [
-    { name: 'Annual Income', value: financialData.annualIncome },
-    { name: 'Current Savings', value: financialData.currentSavings },
+    { name: "Annual Income", value: financialData.annualIncome },
+    { name: "Current Savings", value: financialData.currentSavings },
   ];
 
   return (
     <Container maxW="container.xl" py={12}>
       <Box mb={10}>
-        <Heading size="2xl" mb={2}>Financial Snapshot</Heading>
+        <Heading size="2xl" mb={2}>
+          Financial Snapshot
+        </Heading>
         <Box w="60px" h="4px" bg="black" mb={6} />
       </Box>
-      
+
       {!isEditing ? (
         <VStack spacing={10} align="stretch">
           <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={8}>
-            <Box 
-              p={6} 
-              borderRadius="xl" 
-              boxShadow="lg" 
-              bg={useColorModeValue('white', 'gray.800')}
+            <Box
+              p={6}
+              borderRadius="xl"
+              boxShadow="lg"
+              bg={useColorModeValue("white", "gray.800")}
               border="1px solid"
-              borderColor={useColorModeValue('gray.200', 'gray.700')}
+              borderColor={useColorModeValue("gray.200", "gray.700")}
               transition="transform 0.2s"
-              _hover={{ transform: 'translateY(-4px)' }}
+              _hover={{ transform: "translateY(-4px)" }}
             >
               <Stat>
-                <StatLabel fontSize="sm" color="gray.500" mb={2}>Net Worth</StatLabel>
-                <StatNumber fontSize="3xl">${netWorth.toLocaleString()}</StatNumber>
+                <StatLabel fontSize="sm" color="gray.500" mb={2}>
+                  Net Worth
+                </StatLabel>
+                <StatNumber fontSize="3xl">
+                  ${netWorth.toLocaleString()}
+                </StatNumber>
               </Stat>
             </Box>
-            <Box 
-              p={6} 
-              borderRadius="xl" 
-              boxShadow="lg" 
-              bg={useColorModeValue('white', 'gray.800')}
+            <Box
+              p={6}
+              borderRadius="xl"
+              boxShadow="lg"
+              bg={useColorModeValue("white", "gray.800")}
               border="1px solid"
-              borderColor={useColorModeValue('gray.200', 'gray.700')}
+              borderColor={useColorModeValue("gray.200", "gray.700")}
               transition="transform 0.2s"
-              _hover={{ transform: 'translateY(-4px)' }}
+              _hover={{ transform: "translateY(-4px)" }}
             >
               <Stat>
-                <StatLabel fontSize="sm" color="gray.500" mb={2}>Annual Income</StatLabel>
-                <StatNumber fontSize="3xl">${financialData.annualIncome.toLocaleString()}</StatNumber>
+                <StatLabel fontSize="sm" color="gray.500" mb={2}>
+                  Annual Income
+                </StatLabel>
+                <StatNumber fontSize="3xl">
+                  ${financialData.annualIncome.toLocaleString()}
+                </StatNumber>
               </Stat>
             </Box>
-            <Box 
-              p={6} 
-              borderRadius="xl" 
-              boxShadow="lg" 
-              bg={useColorModeValue('white', 'gray.800')}
+            <Box
+              p={6}
+              borderRadius="xl"
+              boxShadow="lg"
+              bg={useColorModeValue("white", "gray.800")}
               border="1px solid"
-              borderColor={useColorModeValue('gray.200', 'gray.700')}
+              borderColor={useColorModeValue("gray.200", "gray.700")}
               transition="transform 0.2s"
-              _hover={{ transform: 'translateY(-4px)' }}
+              _hover={{ transform: "translateY(-4px)" }}
             >
               <Stat>
-                <StatLabel fontSize="sm" color="gray.500" mb={2}>Current Savings</StatLabel>
-                <StatNumber fontSize="3xl">${financialData.currentSavings.toLocaleString()}</StatNumber>
+                <StatLabel fontSize="sm" color="gray.500" mb={2}>
+                  Current Savings
+                </StatLabel>
+                <StatNumber fontSize="3xl">
+                  ${financialData.currentSavings.toLocaleString()}
+                </StatNumber>
               </Stat>
             </Box>
-            <Box 
-              p={6} 
-              borderRadius="xl" 
-              boxShadow="lg" 
-              bg={useColorModeValue('white', 'gray.800')}
+            <Box
+              p={6}
+              borderRadius="xl"
+              boxShadow="lg"
+              bg={useColorModeValue("white", "gray.800")}
               border="1px solid"
-              borderColor={useColorModeValue('gray.200', 'gray.700')}
+              borderColor={useColorModeValue("gray.200", "gray.700")}
               transition="transform 0.2s"
-              _hover={{ transform: 'translateY(-4px)' }}
+              _hover={{ transform: "translateY(-4px)" }}
             >
               <Stat>
-                <StatLabel fontSize="sm" color="gray.500" mb={2}>Financial Health Score</StatLabel>
-                <StatNumber fontSize="3xl">{financialHealthScore}/100</StatNumber>
+                <StatLabel fontSize="sm" color="gray.500" mb={2}>
+                  Financial Health Score
+                </StatLabel>
+                <StatNumber fontSize="3xl">
+                  {financialHealthScore}/100
+                </StatNumber>
               </Stat>
             </Box>
           </SimpleGrid>
 
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
-            <Box 
-              height="450px" 
-              p={6} 
-              borderRadius="xl" 
-              boxShadow="lg" 
-              bg={useColorModeValue('white', 'gray.800')}
+            <Box
+              height="450px"
+              p={6}
+              borderRadius="xl"
+              boxShadow="lg"
+              bg={useColorModeValue("white", "gray.800")}
               border="1px solid"
-              borderColor={useColorModeValue('gray.200', 'gray.700')}
+              borderColor={useColorModeValue("gray.200", "gray.700")}
             >
-              <Heading size="md" mb={6}>Monthly Expenses</Heading>
+              <Heading size="md" mb={6}>
+                Monthly Expenses
+              </Heading>
               <ResponsiveContainer width="100%" height="90%">
                 <PieChart>
                   <Pie
@@ -232,68 +283,90 @@ const FinancialSnapshot = () => {
                     dataKey="value"
                   >
                     {expenseData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: useColorModeValue('white', 'gray.800'),
-                      border: '1px solid #ccc',
-                      borderRadius: '4px'
-                    }} 
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: useColorModeValue("white", "gray.800"),
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                    }}
                   />
                   <Legend verticalAlign="bottom" height={36} />
                 </PieChart>
               </ResponsiveContainer>
             </Box>
 
-            <Box 
-              height="450px" 
+            <Box
+              height="450px"
               p={8}
-              bg={useColorModeValue('white', 'gray.800')}
+              bg={useColorModeValue("white", "gray.800")}
               borderRadius="2xl"
               boxShadow="0 4px 20px rgba(0, 0, 0, 0.05)"
               position="relative"
               overflow="hidden"
             >
-              <Heading size="md" mb={8} fontWeight="medium" letterSpacing="-0.5px">Income vs Savings</Heading>
+              <Heading
+                size="md"
+                mb={8}
+                fontWeight="medium"
+                letterSpacing="-0.5px"
+              >
+                Income vs Savings
+              </Heading>
               <ResponsiveContainer width="100%" height="85%">
                 <BarChart
                   data={incomeVsSavingsData}
                   margin={{ top: 20, right: 30, left: 40, bottom: 5 }}
                   barSize={60}
                 >
-                  <CartesianGrid 
-                    strokeDasharray="3 3" 
-                    stroke={useColorModeValue('rgba(0,0,0,0.05)', 'rgba(255,255,255,0.05)')} 
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke={useColorModeValue(
+                      "rgba(0,0,0,0.05)",
+                      "rgba(255,255,255,0.05)"
+                    )}
                     vertical={false}
                   />
-                  <XAxis 
-                    dataKey="name" 
-                    stroke={useColorModeValue('gray.600', 'gray.400')}
+                  <XAxis
+                    dataKey="name"
+                    stroke={useColorModeValue("gray.600", "gray.400")}
                     tickLine={false}
                     axisLine={false}
                   />
-                  <YAxis 
-                    stroke={useColorModeValue('gray.600', 'gray.400')}
+                  <YAxis
+                    stroke={useColorModeValue("gray.600", "gray.400")}
                     tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                     tickLine={false}
                     axisLine={false}
-                    domain={[0, Math.max(financialData.annualIncome, financialData.currentSavings) * 1.1]}
+                    domain={[
+                      0,
+                      Math.max(
+                        financialData.annualIncome,
+                        financialData.currentSavings
+                      ) * 1.1,
+                    ]}
                   />
-                  <Tooltip 
-                    cursor={{ fill: 'rgba(0,0,0,0.02)' }}
-                    contentStyle={{ 
-                      backgroundColor: useColorModeValue('white', 'gray.800'),
-                      borderRadius: '12px',
-                      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-                      border: 'none',
-                      padding: '12px'
+                  <Tooltip
+                    cursor={{ fill: "rgba(0,0,0,0.02)" }}
+                    contentStyle={{
+                      backgroundColor: useColorModeValue("white", "gray.800"),
+                      borderRadius: "12px",
+                      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+                      border: "none",
+                      padding: "12px",
                     }}
-                    formatter={(value: number) => [`$${value.toLocaleString()}`, 'Amount']}
+                    formatter={(value: number) => [
+                      `$${value.toLocaleString()}`,
+                      "Amount",
+                    ]}
                   />
-                  <Bar 
-                    dataKey="value" 
+                  <Bar
+                    dataKey="value"
                     fill="#82ca9d"
                     radius={[4, 4, 0, 0]}
                     maxBarSize={80}
@@ -302,9 +375,9 @@ const FinancialSnapshot = () => {
               </ResponsiveContainer>
             </Box>
           </SimpleGrid>
-          
+
           <Box display="flex" justifyContent="center" mt={8}>
-            <Button 
+            <Button
               colorScheme="brand"
               bg="black"
               color={buttonColor}
@@ -342,24 +415,36 @@ const FinancialSnapshot = () => {
               />
             </FormControl>
             <Box>
-              <Heading size="md" mb={4}>Monthly Expenses:</Heading>
-              {Object.entries(financialData.monthlyExpenses).map(([category, amount]) => (
-                <FormControl key={category} mb={4}>
-                  <FormLabel htmlFor={category}>{category}:</FormLabel>
-                  <Input
-                    type="number"
-                    id={category}
-                    value={amount}
-                    onChange={(e) => handleExpenseChange(category, e.target.value)}
-                    required
-                  />
-                </FormControl>
-              ))}
+              <Heading size="md" mb={4}>
+                Monthly Expenses:
+              </Heading>
+              {Object.entries(financialData.monthlyExpenses).map(
+                ([category, amount]) => (
+                  <FormControl key={category} mb={4}>
+                    <FormLabel htmlFor={category}>{category}:</FormLabel>
+                    <Input
+                      type="number"
+                      id={category}
+                      value={amount}
+                      onChange={(e) =>
+                        handleExpenseChange(category, e.target.value)
+                      }
+                      required
+                    />
+                  </FormControl>
+                )
+              )}
             </Box>
             <FormControl>
               <FormLabel>Financial Goals:</FormLabel>
               <VStack align="start">
-                {['retirement', 'homePurchase', 'debtPayoff', 'investment', 'other'].map(goal => (
+                {[
+                  "retirement",
+                  "homePurchase",
+                  "debtPayoff",
+                  "investment",
+                  "other",
+                ].map((goal) => (
                   <Checkbox
                     key={goal}
                     isChecked={financialData.financialGoals.includes(goal)}
@@ -383,16 +468,16 @@ const FinancialSnapshot = () => {
                 <option value="high">High</option>
               </Select>
             </FormControl>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               colorScheme="brand"
               bg="black"
               color={buttonColor}
             >
               Save Changes
             </Button>
-            <Button 
-              onClick={() => setIsEditing(false)} 
+            <Button
+              onClick={() => setIsEditing(false)}
               colorScheme="brand"
               bg="black"
               color={buttonColor}
@@ -409,7 +494,9 @@ const FinancialSnapshot = () => {
           <ModalHeader>Update Financial Details</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            This feature is not fully implemented in the template. In a real application, this would update your financial details in the database.
+            This feature is not fully implemented in the template. In a real
+            application, this would update your financial details in the
+            database.
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>

@@ -1,37 +1,41 @@
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 // Initialize the OpenAI API client
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, 
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 // Function to generate general financial advice
 export async function generateFinancialAdvice(prompt: string): Promise<string> {
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
       max_tokens: 1000,
       n: 1,
-      temperature: 0.7, 
+      temperature: 0.7,
     });
 
-    return response.choices[0].message.content?.trim() || '';
+    return response.choices[0].message.content?.trim() || "";
   } catch (error) {
-    console.error('Error generating financial advice:', error);
-    throw new Error('Failed to generate financial advice');
+    console.error("Error generating financial advice:", error);
+    throw new Error("Failed to generate financial advice");
   }
 }
 
 // Function to generate personalized financial advice based on user profile
-export async function generatePersonalizedFinancialAdvice(user: any, question: string, area: string): Promise<string> {
+export async function generatePersonalizedFinancialAdvice(
+  user: any,
+  question: string,
+  area: string
+): Promise<string> {
   // Construct the prompt for the OpenAI API
   const prompt = `
     User Profile:
     - Annual Income: $${user.annualIncome}
     - Monthly Expenses: ${JSON.stringify(user.monthlyExpenses)}
     - Current Savings: $${user.currentSavings}
-    - Financial Goals: ${user.financialGoals.join(', ')}
+    - Financial Goals: ${user.financialGoals.join(", ")}
     - Risk Tolerance: ${user.riskTolerance}
 
     Question: ${question}
@@ -44,29 +48,32 @@ export async function generatePersonalizedFinancialAdvice(user: any, question: s
 
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
       max_tokens: 1000,
       n: 1,
       temperature: 0.7,
     });
 
-    return response.choices[0].message.content?.trim() || '';
+    return response.choices[0].message.content?.trim() || "";
   } catch (error) {
-    console.error('Error generating personalized financial advice:', error);
-    throw new Error('Failed to generate personalized financial advice');
+    console.error("Error generating personalized financial advice:", error);
+    throw new Error("Failed to generate personalized financial advice");
   }
 }
 
 // Function to generate a strategy for achieving a specific financial goal
-export async function generateGoalStrategy(user: any, goal: any): Promise<string> {
+export async function generateGoalStrategy(
+  user: any,
+  goal: any
+): Promise<string> {
   // Construct the prompt for the OpenAI API
   const prompt = `
     User Profile:
     - Annual Income: $${user.annualIncome}
     - Monthly Expenses: ${JSON.stringify(user.monthlyExpenses)}
     - Current Savings: $${user.currentSavings}
-    - Financial Goals: ${user.financialGoals.join(', ')}
+    - Financial Goals: ${user.financialGoals.join(", ")}
     - Risk Tolerance: ${user.riskTolerance}
 
     Goal Details:
@@ -81,38 +88,40 @@ export async function generateGoalStrategy(user: any, goal: any): Promise<string
 
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
       max_tokens: 1000,
       n: 1,
       temperature: 0.7,
     });
 
-    return response.choices[0].message.content?.trim() || '';
+    return response.choices[0].message.content?.trim() || "";
   } catch (error) {
-    console.error('Error generating goal strategy:', error);
-    throw new Error('Failed to generate goal strategy');
+    console.error("Error generating goal strategy:", error);
+    throw new Error("Failed to generate goal strategy");
   }
 }
 
 // Function to generate a chat response based on conversation history
-export async function generateChatResponse(messages: { role: string; content: string }[]): Promise<string> {
+export async function generateChatResponse(
+  messages: { role: string; content: string }[]
+): Promise<string> {
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: messages.map(msg => ({
-        role: msg.role as 'user' | 'assistant' | 'system', 
-        content: msg.content
+      model: "gpt-3.5-turbo",
+      messages: messages.map((msg) => ({
+        role: msg.role as "user" | "assistant" | "system",
+        content: msg.content,
       })),
       max_tokens: 1000,
       n: 1,
       temperature: 0.7,
     });
 
-    return response.choices[0].message.content || '';
+    return response.choices[0].message.content || "";
   } catch (error) {
-    console.error('Error generating chat response:', error);
-    throw new Error('Failed to generate chat response');
+    console.error("Error generating chat response:", error);
+    throw new Error("Failed to generate chat response");
   }
 }
 
