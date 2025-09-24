@@ -84,15 +84,12 @@ npm run dev
 
 We love contributions! Here's how you can help make FinanceGPT even better:
 
-1. Fork the project (`gh repo fork https://github.com/0xmetaschool/ai-finance-advisor.git`)
+1. Fork the project (`gh repo fork https://github.com/SaishKaradagi/finace.git`)
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/0xmetaschool/finance-gpt/blob/main/LICENSE) file for details.
 
 
 ## Contact
