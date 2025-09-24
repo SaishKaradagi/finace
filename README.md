@@ -30,7 +30,7 @@ Built with Next.js and AI technology, this open-source template helps developers
 **1. Clone the repository:**
 
 ```bash
-git clone https://github.com/0xmetaschool/finance-gpt.git
+git clone https://github.com/SaishKaradagi/finace.git
 cd finance-gpt
 ```
 
